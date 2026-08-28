@@ -85,7 +85,7 @@ The intended workflow is:
 2. Apply the trained model to generate a decline-risk probability.
 3. Rank pages by the model score.
 4. Combine the learned ranking with transparent baseline evidence when producing the final review queue.
-5. Attach human-readable reason codes to help reviewers understand why a page was surfaced.
+5. Where implemented, attach human-readable reason codes to help reviewers understand why a page was surfaced.
 6. Review the highest-priority pages manually before taking action.
 
 The prototype is therefore a prioritization system, not an automated content-editing system.
