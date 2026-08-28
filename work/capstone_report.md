@@ -1,142 +1,530 @@
 # Capstone Report — Refresh / Content Opportunity Scoring
 
-**Project:** FlyRank ML Internship  
-**Track:** Machine Learning — Refresh / Content Opportunity Scoring  
+**Project:** FlyRank ML Internship
+**Track:** Machine Learning — Refresh / Content Opportunity Scoring
 **Author:** Roselyn Koech
 
-## 1. Executive Summary
+---
 
-This capstone builds a decision-support workflow for prioritizing content pages for review. The goal is not to predict Google's algorithm or guarantee that a page will recover after an edit. The goal is to rank pages that show stronger observed signals of decline so a content or SEO team can review a small queue first.
+## 1. Title and Abstract
 
-The analysis uses the anonymized starter dataset with 30,000 prepared rows and an observed declining base rate of 54.2%. The primary evaluation uses a client-grouped holdout: 27,675 rows for training and 2,325 rows for testing, with 6 clients held out and zero client overlap between train and test.
+### Refresh / Content Opportunity Scoring: A Machine Learning Approach to Content Review Prioritization
 
-Under this validation design, the Random Forest produced ROC AUC of 0.754, Average Precision of 0.636, Precision@20 of 0.90, and Precision@50 of 0.74. The transparent baseline produced ROC AUC of 0.528, Precision@20 of 0.30, and Precision@50 of 0.46. The learned model therefore produced a substantially stronger ranking of the highest-priority review candidates on the held-out clients.
+This capstone addresses the question: **Which content pages should be reviewed first for refresh based on observed performance signals?** The analysis uses a public safe, anonymized starter dataset containing 30,000 prepared rows, with an observed declining label rate of 54.2%. A transparent rule based baseline is compared with Logistic Regression, Decision Tree, and Random Forest models using a client grouped holdout consisting of 27,675 training rows and 2,325 test rows, with six held out clients and zero client overlap. Random Forest achieved the strongest ranking results, including ROC AUC of 0.754, Average Precision of 0.636, Precision@20 of 0.90, and Precision@50 of 0.74, compared with baseline Precision@20 of 0.30 and Precision@50 of 0.46. The resulting workflow is intended as decision support for prioritizing human review, not as a causal model of content recovery or a prediction of Google's ranking algorithm.
 
-The result supports using the Random Forest as the ranking component for this prototype, while keeping the output explicitly decision-support rather than a causal claim about content performance.
+---
 
-## 2. Business / Research Question
+## 2. Introduction / Problem
 
-**Research question:** Which content pages should be reviewed first for refresh based on observed performance signals?
+Content and SEO teams may have many pages that could potentially require attention, while the time available for detailed review is limited. Treating every page equally can make it difficult to identify which pages deserve attention first.
 
-**Decision supported:** Provide a ranked queue of pages for human review instead of treating every page equally.
+This capstone therefore focuses on **prioritization** rather than automatic content editing.
 
-The operational metric is **Precision@20**, because the intended workflow is a small review queue. Secondary metrics are Precision@50, Average Precision, and ROC AUC.
+The practical problem is:
+
+> A content team needs a defensible way to identify a small set of pages that should be reviewed first.
+
+The machine learning workflow addresses this by ranking pages according to their estimated likelihood of belonging to the observed declining class.
+
+The purpose is not to predict Google's search algorithm, guarantee a future traffic recovery, or automatically decide whether a page should be rewritten or removed.
+
+The intended outcome is a ranked queue that helps a human reviewer decide where to start.
+
+### Research Question
+
+**Which content pages should be reviewed first for refresh based on observed performance signals?**
+
+### Decision Supported
+
+The workflow supports a decision to:
+
+> **Prioritize a small ranked queue of content pages for human review rather than treating every page equally.**
+
+The primary operational metric is **Precision@20**, because the intended use case is a small review queue. Secondary metrics are Precision@50, Average Precision, and ROC AUC.
+
+---
 
 ## 3. Data
 
-The capstone uses the public-safe anonymized starter CSV:
+### 3.1 Dataset
+
+The capstone uses the public safe anonymized starter dataset:
 
 `data/raw/content_refresh_anonymized.csv`
 
-The prepared dataset contains 30,000 rows. Pages are retained when they have positive 90-day impressions and are at least 90 days old, and duplicate `content_id` values are removed.
+The prepared working dataset contains **30,000 rows** and 44 original columns before additional derived variables are created.
 
-The target is `is_declining_label`, defined from the observed condition `trend_direction == "down"`.
+The dataset is anonymized and does not expose client names, URLs, titles, or private search queries.
 
-Client identifiers are used for grouped validation only and are not predictive features. The modeling features consist of numeric performance, content, search, engagement, and freshness signals together with categorical content and tier variables. Outcome-defining fields such as `trend_direction` are excluded from the predictive feature set.
+### 3.2 Eligibility and Preparation
 
-The data is anonymized and does not expose client names, URLs, titles, or private queries.
+The analysis retains pages with:
+
+* Positive 90 day impressions
+* Content age of at least 90 days
+
+Duplicate `content_id` values are removed after these filters.
+
+Relevant numeric fields are converted to numeric values, invalid values are handled, and logarithmic transformations are created for selected traffic variables.
+
+Categorical variables are converted to string values, with missing categories represented as `"unknown"`.
+
+After preparation, the notebook records:
+
+**Prepared rows: 30,000**
+
+**Declining label rate: 54.2%**
+
+### 3.3 Target Definition
+
+The target variable is:
+
+`is_declining_label`
+
+It is defined from the observed condition:
+
+`trend_direction == "down"`
+
+This means that the model is predicting the observed declining label defined in the dataset. It is not predicting a future traffic recovery or a causal need for a content refresh.
+
+### 3.4 Predictive Features
+
+The modelling features include observed signals covering areas such as:
+
+* Search demand
+* Competition
+* Cost per click
+* Content size
+* Impressions
+* Clicks
+* Sessions
+* AI sessions
+* Content age
+* Time since last update
+* CTR
+* Average position
+* Engagement
+* Scroll behaviour
+* AI traffic percentage
+* Content and tier categories
+
+Identifiers are not used as predictive variables.
+
+`client_id` is retained for validation grouping only.
+
+---
 
 ## 4. Methodology
 
-### 4.1 Transparent baseline
+### 4.1 Transparent Baseline
 
-The baseline is a human-readable scoring approach built from observable performance signals. It combines low CTR at 40%, average position opportunity at 35%, and 90-day impressions / visibility at 25%. This creates a transparent benchmark that can be inspected without a machine-learning model.
+The first benchmark is a transparent, human readable scoring rule.
 
-### 4.2 Learned models
+The baseline combines three observable signals:
 
-Three supervised models were compared: Logistic Regression, Decision Tree, and Random Forest. Positive-class probabilities were used as ranking scores. Random Forest was selected for the final ranking because it produced the strongest overall results under the grouped validation used for the capstone.
+| Signal                              | Weight |
+| ----------------------------------- | -----: |
+| Low CTR                             |    40% |
+| Weak average position               |    35% |
+| Low 90 day visibility / impressions |    25% |
 
-### 4.3 Validation design
+The baseline provides a simple benchmark that can be inspected without a machine learning model.
 
-The primary split is a **client-grouped holdout**. Entire clients are kept out of training so the model is evaluated on clients it did not see during fitting.
+This is important because the learned models should demonstrate improvement over a reasonable transparent approach rather than being evaluated in isolation.
 
-Validation results from the capstone notebook:
+### 4.2 Learned Models
 
-* Training rows: 27,675
-* Test rows: 2,325
-* Held-out clients: 6
-* Client overlap: 0
-* Random seed: 42
+Three supervised learning approaches are compared:
 
-This is more conservative than a simple random row split because it reduces the risk that pages from the same client appear on both sides of the evaluation.
+1. Logistic Regression
+2. Shallow Decision Tree
+3. Random Forest
 
-## 5. Results
+The models generate positive class probabilities, which are then used as ranking scores.
 
-| Method | ROC AUC | Average Precision | Precision@20 | Precision@50 |
-|---|---:|---:|---:|---:|
-| Random Forest | **0.754** | **0.636** | **0.90** | **0.74** |
-| Decision Tree | 0.740 | 0.570 | 0.65 | 0.62 |
-| Logistic Regression | 0.703 | 0.521 | 0.35 | 0.34 |
-| Baseline Rules | 0.528 | 0.443 | 0.30 | 0.46 |
+Random Forest is selected as the final ranking component because it provides the strongest overall ranking performance under the final grouped validation.
 
-The Random Forest is the strongest model across the ranking metrics reported by the capstone notebook.
+### 4.3 Validation Design
 
-For the primary operational metric, Precision@20 of 0.90 means that 18 of the top 20 ranked test pages were positive under the observed declining label. Precision@50 of 0.74 means that 37 of the top 50 ranked test pages were positive under that label.
+The primary evaluation uses a **client grouped holdout**.
 
-Compared with the baseline, the Random Forest improved Precision@20 from 0.30 to 0.90 and Precision@50 from 0.46 to 0.74. ROC AUC also increased from 0.528 to 0.754.
+Entire clients are held out from model training so that the evaluation measures performance on clients the model did not see during fitting.
 
-These are held-out evaluation results on the anonymized starter dataset. They should not be interpreted as evidence that the model will achieve the same performance on a different dataset, on future production traffic, or on the full warehouse without revalidation.
+The final validation configuration is:
 
-## 6. Decision Workflow
+| Validation item  |                 Result |
+| ---------------- | ---------------------: |
+| Split strategy   | Client grouped holdout |
+| Training rows    |                 27,675 |
+| Test rows        |                  2,325 |
+| Held out clients |                      6 |
+| Client overlap   |                      0 |
+| Random seed      |                     42 |
 
-The intended workflow is:
+The notebook explicitly checks the client overlap and confirms that it is zero.
 
-1. Prepare observable content and performance signals.
-2. Apply the trained model to generate a decline-risk probability.
-3. Rank pages by the model score.
-4. Combine the learned ranking with transparent baseline evidence when producing the final review queue.
-5. Where implemented, attach human-readable reason codes to help reviewers understand why a page was surfaced.
-6. Review the highest-priority pages manually before taking action.
+This approach is more conservative than a simple random row split because pages from the same client are not intentionally placed on both sides of the final client grouped evaluation.
 
-The prototype is therefore a prioritization system, not an automated content-editing system.
+---
 
-A high ranking should be interpreted as **review first**, not **guaranteed recovery**.
+## 5. Leakage and Integrity Controls
 
-## 7. Leakage and Integrity Controls
+Leakage prevention is a central part of the capstone.
 
-The capstone explicitly separates identifiers and outcome-defining information from predictive features.
+The following controls are applied:
 
-* `content_id` is treated as an identifier, not a predictive feature.
-* `client_id` is used for grouped validation, not prediction.
+* `content_id` is treated as an identifier rather than a predictive feature.
+* `client_id` is used for grouped validation and is not used for prediction.
 * `trend_direction` is used to define the observed target and is excluded from predictive features.
 * `trend_pct` is excluded because it is directly related to the outcome definition.
-* The dataset contains anonymized observable signals rather than private client information.
-* The client-grouped split was checked for overlap and returned zero client overlap.
+* The grouped validation split is checked for client overlap.
+* The final client grouped split records zero overlap.
+* The dataset used for the project is anonymized and public safe.
 
-These controls are intended to keep the reported validation result honest and reproducible.
+These controls reduce the risk that the model receives direct access to the outcome or that the evaluation is artificially strengthened by client overlap.
 
-## 8. What the Results Do and Do Not Show
+---
 
-The results show that, on this 30,000-row anonymized starter dataset and under the client-grouped holdout, the Random Forest ranks observed declining pages substantially better than the transparent baseline.
+## 6. Results
+
+### 6.1 Model Comparison
+
+The final capstone evaluation produced the following results:
+
+| Method              |   ROC AUC | Average Precision | Precision@20 | Precision@50 |
+| ------------------- | --------: | ----------------: | -----------: | -----------: |
+| Random Forest       | **0.754** |         **0.636** |     **0.90** |     **0.74** |
+| Decision Tree       |     0.740 |             0.570 |         0.65 |         0.62 |
+| Logistic Regression |     0.703 |             0.521 |         0.35 |         0.34 |
+| Baseline Rules      |     0.528 |             0.443 |         0.30 |         0.46 |
+
+Random Forest is the strongest model across the main ranking metrics.
+
+For the primary operational metric:
+
+**Random Forest Precision@20 = 0.90**
+
+This means that **18 of the top 20 ranked test pages** were positive under the observed declining label.
+
+At the top 50:
+
+**Random Forest Precision@50 = 0.74**
+
+This corresponds to **37 of the top 50 ranked test pages** being positive under the observed declining label.
+
+### 6.2 Comparison with the Baseline
+
+The Random Forest improved Precision@20 from:
+
+**0.30 → 0.90**
+
+It also improved Precision@50 from:
+
+**0.46 → 0.74**
+
+ROC AUC increased from:
+
+**0.528 → 0.754**
+
+These results indicate that the learned model produced a substantially stronger ranking of observed declining pages than the transparent baseline on the held out clients.
+
+### 6.3 Interpretation
+
+The most relevant result for the intended business workflow is Precision@20 because the objective is to identify a small set of pages for review.
+
+The evaluation therefore supports retaining Random Forest as the ranking component of this prototype.
+
+The result should be interpreted narrowly:
+
+> The Random Forest ranked pages with the observed declining label more effectively than the transparent baseline on the evaluated held out clients.
+
+It should not be interpreted as proof that the model can predict Google's ranking algorithm or guarantee that editing a page will improve its future performance.
+
+---
+
+## 7. Decision Workflow
+
+The intended operational workflow is:
+
+**Prepare data → score pages → rank pages → review highest priority candidates → decide action → monitor**
+
+More specifically:
+
+1. Prepare eligible content and performance signals.
+2. Apply the trained Random Forest model.
+3. Generate a positive class probability for each page.
+4. Rank pages by the model score.
+5. Use the ranked output to create a small review queue.
+6. Examine the page's available performance context.
+7. Have a human reviewer determine the appropriate action.
+8. Monitor the outcome after any action.
+
+The model is therefore a **prioritization system**, not an automated content editing system.
+
+A high model score means:
+
+> **Review earlier.**
+
+It does not mean:
+
+> **Automatically rewrite, expand, protect, or prune the page.**
+
+---
+
+## 8. Ranked Recommendations
+
+The model results support the following ranked operational recommendations.
+
+### Recommendation 1 — Review the highest ranked pages first
+
+Use the Random Forest ranking to create the initial small review queue.
+
+This is supported by the held out **Precision@20 of 0.90**, where 18 of the top 20 ranked test pages were positive under the observed declining label.
+
+### Recommendation 2 — Investigate before editing
+
+A high score should trigger investigation rather than an automatic content change.
+
+Review available context such as:
+
+* CTR
+* Average position
+* Traffic
+* Impressions
+* Content age
+* Freshness
+* Engagement signals
+
+The objective is to determine whether the observed decline represents a meaningful content opportunity.
+
+### Recommendation 3 — Match the action to the page evidence
+
+After human review, a surfaced page may be appropriate for:
+
+* Refresh
+* Expansion
+* Monitoring
+* Protection
+* No immediate change
+
+The model does not independently determine which action is correct.
+
+### Recommendation 4 — Use the queue to allocate limited review time
+
+The strongest operational value of the model is prioritization.
+
+Instead of reviewing every page equally, the team can begin with the highest ranked candidates and expand the review queue if capacity allows.
+
+### Recommendation 5 — Keep human review as the final decision point
+
+The model should remain a decision support tool.
+
+A high score is evidence for **earlier review**, not evidence of guaranteed recovery.
+
+### Recommended Operating Rule
+
+**Random Forest ranking → highest priority queue → contextual page review → human action decision → monitoring**
+
+The notebook supports the ranking component and its evaluation. Individual page level actions should only be made after inspecting the relevant page evidence.
+
+---
+
+## 9. What the Results Do and Do Not Show
+
+### What the Results Show
+
+The results show that, on the 30,000 row anonymized starter dataset and under the client grouped holdout, Random Forest produced a substantially stronger ranking of the observed declining class than the transparent baseline.
+
+The strongest evidence is:
+
+* Precision@20: **0.90**
+* Precision@50: **0.74**
+* ROC AUC: **0.754**
+* Average Precision: **0.636**
+
+### What the Results Do Not Show
 
 The results do **not** establish that:
 
 * changing a page will cause traffic or rankings to recover;
 * the model predicts Google's ranking algorithm;
+* the model will perform identically on future production data;
 * the model will generalize unchanged to the full warehouse;
-* every high-ranked page is a good refresh candidate after human review;
-* the observed decline cannot have another explanation such as consolidation, seasonality, or noise.
+* every high ranked page is necessarily a good refresh candidate;
+* the observed decline has a single cause;
+* the model has demonstrated a causal relationship between content changes and performance recovery.
 
-A content change causing recovery would require an experiment or another causal design. This capstone is decision-support work.
+A causal claim about content changes would require an experiment or another appropriate causal design.
 
-## 9. Limitations and Next Steps
+This capstone is therefore appropriately described as **decision support and prioritization**.
 
-The main limitation is scope. The evaluation is based on the anonymized 30,000-row starter dataset rather than the full warehouse. The grouped holdout provides a stronger validation design, but it remains one held-out evaluation rather than evidence of production performance across time and clients.
+---
 
-The next validation stage should test the workflow on additional client groups and, where appropriate, a future-looking time split. The final production workflow should also monitor ranking quality after deployment and periodically revalidate the model as content behavior changes.
+## 10. Limitations and Next Steps
 
-No feature-importance analysis or detailed error-pattern analysis is claimed in this report because those results are not part of the verified capstone evidence used here.
+### 10.1 Dataset Scope
 
-## 10. Reproducibility
+The evaluation uses the anonymized 30,000 row starter dataset rather than the full warehouse.
 
-The project code and capstone notebook are stored in the repository at `work/notebooks/capstone.ipynb`.
+The reported results should therefore be treated as evaluation evidence for this dataset rather than guaranteed production performance.
 
-The repository also contains the required Python environment specification used to support reproducible execution.
+### 10.2 Validation Scope
 
-The capstone uses a fixed random seed of 42 and records the validation strategy, train/test sizes, held-out client count, client-overlap check, and evaluation metrics in the notebook.
+The client grouped holdout provides a stronger evaluation design than a simple random row split, but it remains one held out evaluation.
 
-## 11. Conclusion
+Additional client groups and future data should be evaluated before production use.
 
-The capstone demonstrates a practical machine-learning approach to content refresh prioritization. A Random Forest substantially outperformed the transparent baseline on the held-out clients, including a Precision@20 of 0.90 versus 0.30 for the baseline.
+### 10.3 Time Generalization
 
-The strongest conclusion is therefore operational: **the learned ranking provides a more useful small review queue than the fixed baseline on this evaluation set.** The output should be used to focus human review, with the model treated as decision support rather than a guarantee of recovery or a causal prediction system.
+The current evaluation is not a full time based production backtest.
+
+A future validation stage should include an appropriate future looking time split where the available data supports it.
+
+### 10.4 Observational Signals
+
+CTR, position, traffic, freshness, and related variables are observational signals.
+
+They may help identify pages associated with decline, but they should not be interpreted as causes of that decline.
+
+### 10.5 Human Review
+
+The ranked queue still requires human interpretation.
+
+A high score means **review earlier**, not automatic rewriting or pruning.
+
+### 10.6 Production Monitoring
+
+The current notebook is a research and decision support artifact rather than a fully deployed production service with scheduled retraining, monitoring, and model registry infrastructure.
+
+A production version should monitor ranking quality over time and periodically revalidate the model.
+
+### 10.7 Feature Importance and Error Analysis
+
+No feature importance analysis or detailed error pattern analysis is claimed in this report because those results are not part of the verified capstone evidence used here.
+
+---
+
+## 11. Reproducibility
+
+The project repository contains the code and notebook used for the capstone.
+
+The main notebook is:
+
+`work/notebooks/capstone.ipynb`
+
+The project uses a fixed random seed of **42**.
+
+The notebook records:
+
+* Data preparation
+* Target definition
+* Feature preparation
+* Baseline construction
+* Model comparison
+* Client grouped validation
+* Train and test sizes
+* Held out client count
+* Client overlap check
+* Evaluation metrics
+* Final model selection
+
+The repository is intended to allow a reviewer to inspect and rerun the work.
+
+### Public Repository
+
+The complete project is available in the public FlyRank repository:
+
+**https://github.com/Roselyn-Koech/flyrank-ml-internship**
+
+The paper's deployed public URL will be recorded separately in:
+
+`submission/paper_url.txt`
+
+as required by the ML 11 submission specification.
+
+---
+
+## 12. Artifacts Embedded in the Paper
+
+The paper should be accompanied by concise evidence artifacts from the capstone notebook.
+
+### Artifact 1 — Validation Evidence
+
+The notebook records:
+
+* Client grouped holdout
+* 27,675 training rows
+* 2,325 test rows
+* 6 held out clients
+* 0 client overlap
+
+This artifact demonstrates that the final evaluation was performed using the intended grouped validation design.
+
+### Artifact 2 — Model Comparison
+
+The notebook records the final comparison:
+
+| Method              | ROC AUC | Average Precision | Precision@20 | Precision@50 |
+| ------------------- | ------: | ----------------: | -----------: | -----------: |
+| Random Forest       |   0.754 |             0.636 |         0.90 |         0.74 |
+| Decision Tree       |   0.740 |             0.570 |         0.65 |         0.62 |
+| Logistic Regression |   0.703 |             0.521 |         0.35 |         0.34 |
+| Baseline Rules      |   0.528 |             0.443 |         0.30 |         0.46 |
+
+These artifacts provide direct evidence for the model selection and primary ranking result.
+
+---
+
+## 13. Acknowledgments and Data Credit
+
+This project was completed as part of the **FlyRank ML Internship**.
+
+The analysis uses the public safe anonymized starter dataset provided for the internship project.
+
+The FlyRank project repository and associated materials should be credited and linked from the deployed paper as required by the assignment.
+
+**FlyRank:** https://github.com/flyrank-bih/flyrank-ml-internship-starter
+
+The project does not expose private client information, private queries, client names, or other confidential data.
+
+---
+
+## 14. AI Transparency
+
+AI assistance was used during development to help structure, review, and document parts of the capstone.
+
+The data preparation, leakage exclusions, validation design, evaluation metrics, and final claims were checked against the capstone notebook.
+
+The report intentionally avoids unsupported claims. In particular, it does not claim feature importance, detailed error patterns, causal effects, production performance, or individual page recommendations where those results were not verified in the capstone evidence.
+
+---
+
+## 15. Conclusion
+
+This capstone demonstrates a practical machine learning workflow for prioritizing content pages for human review.
+
+The analysis compares a transparent baseline with Logistic Regression, Decision Tree, and Random Forest models using a client grouped holdout. The final evaluation contains **27,675 training rows and 2,325 test rows**, with **six held out clients and zero client overlap**.
+
+Random Forest produced the strongest ranking performance, including:
+
+**ROC AUC = 0.754**
+
+**Average Precision = 0.636**
+
+**Precision@20 = 0.90**
+
+**Precision@50 = 0.74**
+
+The transparent baseline achieved Precision@20 of 0.30 and Precision@50 of 0.46.
+
+The strongest practical conclusion is therefore operational:
+
+> **The learned Random Forest ranking provides a more useful small review queue than the fixed baseline on this held out evaluation set.**
+
+The model should be used to focus human attention on the pages that appear most relevant for review. It should not be treated as a guarantee of recovery, a causal model of content performance, or a prediction of Google's ranking algorithm.
+
+The appropriate production workflow is:
+
+**Rank → Review → Decide → Act → Monitor**
+
+This keeps the machine learning model in its appropriate role: **decision support for content prioritization.**
