@@ -360,20 +360,21 @@ as required by the ML 11 submission specification.
 
 ## 12. Artifacts Embedded in the Paper
 
-The paper should be accompanied by concise evidence artifacts from the capstone notebook.
+### 12.1 Validation Evidence
 
-### Artifact 1: Validation Evidence
+The following notebook output verifies the client grouped holdout used for the final evaluation.
 
-The notebook records:
+![Validation evidence](validation_evidence.jpg)
 
-* Client grouped holdout
-* 27,675 training rows
-* 2,325 test rows
-* 6 held out clients
-* 0 client overlap
+The validation output shows 27,675 training rows, 2,325 test rows, 6 held out clients, and zero client overlap.
 
-This artifact demonstrates that the final evaluation was performed using the intended grouped validation design.
+### 12.2 Model Comparison
 
+The following notebook output shows the verified comparison between the transparent baseline and the supervised learning models.
+
+![Model comparison](model_comparison.jpg)
+
+The results show that Random Forest achieved the strongest overall ranking performance, including ROC AUC of 0.754, Average Precision of 0.636, Precision@20 of 0.90, and Precision@50 of 0.74.
 ### Artifact 2: Model Comparison
 
 The notebook records the final comparison:
