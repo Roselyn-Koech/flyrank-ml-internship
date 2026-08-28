@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FlyRank ML Capstone Report | Roselyn Koech</title>
+  <meta name="description" content="Refresh / Content Opportunity Scoring capstone report by Roselyn Koech for the FlyRank ML Internship.">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.7;margin:0;background:#f6f7f9;color:#202124}
+    main{max-width:900px;margin:40px auto;padding:48px;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,.08);border-radius:14px}
+    h1,h2,h3{line-height:1.25;color:#111827} h1{font-size:2.2rem} h2{margin-top:2.4rem;border-bottom:1px solid #e5e7eb;padding-bottom:.35rem}
+    table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f3f4f6}
+    img{max-width:100%;height:auto;border:1px solid #e5e7eb;border-radius:8px;margin:.75rem 0 1.25rem}
+    blockquote{border-left:4px solid #9ca3af;padding-left:1rem;color:#4b5563}
+    code{background:#f3f4f6;padding:.15rem .3rem;border-radius:4px}
+    a{color:#2563eb} .loading{color:#6b7280}
+    @media(max-width:700px){main{margin:0;padding:24px;border-radius:0}h1{font-size:1.8rem}}
+  </style>
+</head>
+<body>
+<main id="paper"><p class="loading">Loading capstone report…</p></main>
+<script>
+const source='https://raw.githubusercontent.com/Roselyn-Koech/flyrank-ml-internship/main/work/capstone_report.md';
+fetch(source).then(r=>r.text()).then(md=>{
+  document.getElementById('paper').innerHTML=marked.parse(md);
+}).catch(()=>{
+  document.getElementById('paper').innerHTML='<h1>Capstone Report</h1><p>The report could not be loaded. Please open the project repository and the <a href="https://github.com/Roselyn-Koech/flyrank-ml-internship/blob/main/work/capstone_report.md">source report</a>.</p>';
+});
+</script>
+</body>
+</html>
