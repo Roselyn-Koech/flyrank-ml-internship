@@ -1,7 +1,9 @@
 # Capstone Report: Refresh / Content Opportunity Scoring
 
 **Project:** FlyRank ML Internship
+
 **Track:** Machine Learning: Refresh / Content Opportunity Scoring
+
 **Author:** Roselyn Koech
 
 ## 1. Title and Abstract
