@@ -64,16 +64,14 @@ The model is a decision-support and prioritization tool. A high score means **re
 | ML-10 | Action playbook | In repository |
 | ML-11 | Capstone | In repository |
 | ML-12 | Demo outline, social-post cut, employer-facing summary | In capstone notebook closing section |
-| FL-09 | Documentation and demo | README/report work present; demo recording to be completed later |
+| FL-09 | Documentation and demo | Written documentation present; demo recording to be completed later |
 | FL-10 | Final package and retrospective | This final checkpoint |
-
-The weekly assignment notebooks are available under [`work/notebooks/`](work/notebooks/). The work folder also contains the assignment map and reproducibility guidance. cite_placeholder
 
 ## Evidence and Reproducibility
 
 The capstone uses a fixed random seed of 42 and documents data preparation, target definition, feature preparation, baseline construction, model comparison, grouped validation, evaluation metrics, and model selection.
 
-The final report includes the verified validation and model-comparison evidence, as well as limitations and AI transparency notes.
+The final report includes the verified validation and model-comparison evidence, limitations, and AI transparency notes.
 
 See [`work/capstone_report.md`](work/capstone_report.md) for the complete technical report.
 
@@ -119,29 +117,11 @@ The following items are intentionally left visible rather than being represented
 
 ## Original Project Documentation
 
-The original setup, pipeline, data-safety, and reference documentation remains below this final submission index for reproducibility.
-
----
-
-# FlyRank ML Internship — Starter Repo
-
-**Applied Search Intelligence: Google Search Ranking & Discoverability**
-
-This is the starting point for the FlyRank ML Internship. You **clone it into your own public repo** (one click — *Use this template*), build everything there, and submit that repo URL on each assignment in your portal — it's your workspace, your submission, and your portfolio all at once.
-
-Everything here runs on a small **anonymized** slice of real FlyRank search data. No credentials, no private client data, no setup headaches.
-
-> **New here?** Two reads: **[SETUP.md](SETUP.md)** and **[GUIDE.md](GUIDE.md)**.
+The original setup, pipeline, data-safety, and reference documentation remain available in the repository for reproducibility.
 
 ## Quickstart
 
-The fastest path is Google Colab. Open Notebook 1 and run all cells:
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Roselyn-Koech/flyrank-ml-internship/blob/main/notebooks/01_first_look_and_discovery.ipynb?flush_cache=true)
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Roselyn-Koech/flyrank-ml-internship/blob/main/notebooks/02_your_first_readable_model.ipynb?flush_cache=true)
-
-For local execution:
+The fastest path is Google Colab. For local execution:
 
 ```bash
 git clone https://github.com/Roselyn-Koech/flyrank-ml-internship.git
@@ -150,20 +130,8 @@ pip install -r requirements.txt
 python scripts/run_all.py
 ```
 
-## Reference Pipeline
-
-```text
-01_prepare_features.py        clean + build the feature vector, define the label
-02_baseline_score.py          transparent hand-rule baseline
-03_train_model.py             supervised models with client-holdout split
-04_evaluate_and_export.py     ranked queue + charts + Markdown report
-05_build_pdf_report.py        shareable PDF summary
-```
-
-## Data Safety
-
-Only the anonymized starter dataset is used. Do not add private client data, credentials, client names, URLs, titles, or private search queries to this repository. Treat results as observed, measured, directional, and decision-support evidence.
+Only the anonymized starter dataset should be used. Do not add private client data, credentials, client names, URLs, titles, or private search queries to this repository.
 
 ## License and Credit
 
-Code is under the repository license. The project was completed as part of the FlyRank ML Internship using the public safe anonymized starter dataset and the internship's technical foundation.
+The project was completed as part of the FlyRank ML Internship using the public safe anonymized starter dataset and the internship's technical foundation.
