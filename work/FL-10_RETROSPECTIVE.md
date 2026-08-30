@@ -1,0 +1,19 @@
+# FlyRank ML Internship Retrospective
+
+## Looking Back from Week 10
+
+When I started the FlyRank ML Internship, I wanted to strengthen my practical machine learning skills and learn how to approach a real data problem from beginning to end. In Week 1, I was mainly focused on getting a model to work. I understood concepts such as classification, features, targets, and evaluation metrics, but I had not yet fully appreciated how much of a machine learning project happens before and after model training.
+
+My project focused on **Refresh / Content Opportunity Scoring**. The goal was to determine which content pages should be reviewed first based on observed performance signals. At first, this sounded like a straightforward prediction problem. As I progressed, I learned that defining the question correctly was more important than immediately choosing an algorithm. I had to think about what the target represented, which features were available at decision time, what information could create leakage, and how the resulting scores would actually support a content team's workflow.
+
+One of the biggest changes in my thinking was moving from simply building a model to building an evidence-based decision process. I started with a transparent baseline so that the machine learning models had something meaningful to beat. I then compared Logistic Regression, Decision Tree, and Random Forest rather than assuming that a more complicated model would automatically be better. The final evaluation used a client-grouped holdout to test whether the approach could generalize beyond the clients used for training.
+
+The results helped reinforce the importance of evaluation design. Random Forest performed best in the verified comparison, achieving a ROC AUC of 0.754 and Precision@20 of 0.90. On the held-out test set, 18 of the top 20 ranked pages were positive under the observed declining label. These results were useful, but I also learned not to overstate them. The model identifies pages associated with the observed label; it does not prove that refreshing a page will improve its future performance or predict Google's ranking algorithm.
+
+My workflow also changed. I became more careful about checking assumptions, documenting decisions, testing for leakage, and distinguishing measured results from interpretations. I learned that a technically impressive model can still produce an unreliable project if the target, split strategy, or evaluation process is poorly designed. I also became more comfortable treating validation as part of the modelling process rather than something added at the end.
+
+If I continued this project, I would build a stronger temporal validation framework, test the approach across additional client groups, and add monitoring for changes in data distributions and model performance. I would also develop a more complete production workflow connecting the ranked review queue to human decisions and later outcomes. That would allow the system to learn from actual content interventions rather than relying only on the observed historical label.
+
+The three most transferable lessons I am taking from this internship are **problem framing, validation discipline, and communicating evidence honestly**. First, I learned to start with the decision that needs to be supported rather than the model I want to use. Second, I learned that a model's evaluation is only meaningful when the validation design reflects the real generalization problem. Third, I learned that communicating limitations is part of good data science, not an admission that the project failed.
+
+Looking back at Week 1, the biggest change is that I no longer see machine learning as simply training a model and reporting a score. I now see it as a process of defining a useful question, building defensible evidence, testing whether that evidence generalizes, and translating the result into a decision that a person can actually use.
