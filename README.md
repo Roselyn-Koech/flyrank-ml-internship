@@ -88,7 +88,9 @@ AI assistance was used during development to help structure, review, and documen
 
 ### FL-09: Documentation and Demo
 
-**Status:** Documentation complete. Demo recording pending.
+### FL-09: Documentation and Demo
+
+**Status:** Documentation and demo complete.
 
 The project documentation includes the project purpose, setup instructions, usage workflow, evaluation results, architecture, limitations, reproducibility information, and AI transparency statement.
 
@@ -100,10 +102,14 @@ The project documentation includes the project purpose, setup instructions, usag
 * Model evaluation and comparison
 * Limitations and responsible interpretation
 * AI transparency statement
-
-**Pending**
-
 * 3–5 minute live demonstration video
+
+**Demo**
+
+[Watch the 3–5 minute project demonstration](https://drive.google.com/file/d/1-ngITGQUtlPk5Cio6rcn3VikxjQWZ8ka/view?usp=drive_link)
+
+The demonstration shows the project workflow, model comparison, evaluation results, validation approach, a key design decision, and an important limitation.
+
 
 ### FL-10: Final Package
 
