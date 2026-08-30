@@ -83,10 +83,8 @@ Additional time-based validation, broader client evaluation, monitoring, and pro
 
 ## AI Transparency
 
-AI assistance was used during development to help structure, review, and document parts of the project. The data preparation, leakage exclusions, validation design, evaluation metrics, and final claims were checked against the capstone notebook. Unsupported feature-importance, causal, production-performance, and page-level claims were intentionally excluded.
+AI assistance was used during development to help structure, review, and document parts of the project. The capstone notebook checked data preparation, leakage exclusions, validation design, evaluation metrics, and final claims. I intentionally excluded unsupported feature-importance, causal, production-performance, and page-level claims.
 ## Final Internship Deliverables
-
-### FL-09: Documentation and Demo
 
 ### FL-09: Documentation and Demo
 
