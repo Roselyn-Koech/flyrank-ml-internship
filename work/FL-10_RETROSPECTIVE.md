@@ -1,18 +1,37 @@
-FlyRank ML Internship Retrospective
-Looking Back from Week 10
+# FL-10 Retrospective
 
-When I started the FlyRank ML Internship, I wanted to strengthen my practical machine learning skills and learn how to approach a real data problem from beginning to end. In Week 1, I was mainly focused on getting a model to work. I understood concepts such as classification, features, targets, and evaluation metrics, but I had not yet fully appreciated how much of a machine learning project happens before and after model training.
+## Looking Back on My FlyRank ML Internship
 
-My project focused on **Refresh / Content Opportunity Scoring**. The goal was to determine which content pages should be reviewed first based on observed performance signals. At first, this sounded like a straightforward prediction problem. As I progressed, I learned that defining the question correctly was more important than immediately choosing an algorithm. I had to think about what the target represented, which features were available at decision time, what information could create leakage, and how the resulting scores would actually support a content team's workflow.
+At the beginning of the FlyRank ML Internship, I wanted to become more confident in applying machine learning to a practical problem rather than only working through isolated exercises. My project focused on **Refresh / Content Opportunity Scoring**, with the goal of identifying which content pages should be reviewed first based on observed performance signals.
 
-One of the biggest changes in my thinking was moving from simply building a model to building an evidence-based decision process. I started with a transparent baseline so that the machine learning models had something meaningful to beat. I then compared Logistic Regression, Decision Tree, and Random Forest rather than assuming that a more complicated model would automatically be better. The final evaluation used a client-grouped holdout to test whether the approach could generalize beyond the clients used for training.
+At first, I was mainly focused on building and comparing machine learning models. As the project progressed, I realized that building a useful ML system involves much more than choosing an algorithm and reporting a high score. I became more focused on the decision the model was intended to support, the quality of the validation strategy, leakage prevention, and whether the evidence actually justified the claims I was making.
 
-The results helped reinforce the importance of evaluation design. Random Forest performed best in the verified comparison, achieving a ROC AUC of 0.754 and Precision@20 of 0.90. On the held-out test set, 18 of the top 20 ranked pages were positive under the observed declining label. These results were useful, but I also learned not to overstate them. The model identifies pages associated with the observed label; it does not prove that refreshing a page will improve its future performance or predict Google's ranking algorithm.
+One of the most important changes in my approach was my understanding of validation. Rather than treating a random row split as sufficient, I used a **client grouped holdout** so that entire clients were held out from training. The final independently reconstructed validation contained 27,675 training rows from 26 clients and 2,325 test rows from 6 completely held out clients, with zero client overlap. The held out test clients also had a lower declining label rate than the training clients, which provided an additional distribution shift check.
 
-My workflow also changed. I became more careful about checking assumptions, documenting decisions, testing for leakage, and distinguishing measured results from interpretations. I learned that a technically impressive model can still produce an unreliable project if the target, split strategy, or evaluation process is poorly designed. I also became more comfortable treating validation as part of the modelling process rather than something added at the end.
+The Random Forest remained the strongest model under this evaluation. The independently reconstructed validation produced a **ROC AUC of 0.745**, compared with the earlier Week 5 reported ROC AUC of 0.750. Average Precision was 0.611, while Precision@50 was 0.72. Precision@20 was 0.80, although I would not interpret that increase alone as evidence of general improvement because it is based on only the top 20 predictions.
 
-If I continued this project, I would build a stronger temporal validation framework, test the approach across additional client groups, and add monitoring for changes in data distributions and model performance. I would also develop a more complete production workflow connecting the ranked review queue to human decisions and later outcomes. That would allow the system to learn from actual content interventions rather than relying only on the observed historical label.
+This validation experience taught me an important lesson: **a model score is only meaningful when I understand how the score was produced and what question the evaluation answers**. I also learned to be careful about the difference between association and causation. My model identifies pages associated with the observed declining label, but it does not prove that refreshing a page will cause its performance to improve. It also does not predict Google's ranking algorithm.
 
-The three most transferable lessons I am taking from this internship are **problem framing, validation discipline, and communicating evidence honestly**. First, I learned to start with the decision that needs to be supported rather than the model I want to use. Second, I learned that a model's evaluation is only meaningful when the validation design reflects the real generalization problem. Third, I learned that communicating limitations is part of good data science, not an admission that the project failed.
+Another major change was learning to communicate limitations honestly. Earlier in my ML learning, I might have focused mainly on the strongest metric. During this internship, I learned that a stronger technical explanation includes what the model does well, where the evaluation is limited, and what cannot reasonably be concluded from the available evidence.
 
-Looking back at Week 1, the biggest change is that I no longer see machine learning as simply training a model and reporting a score. I now see it as a process of defining a useful question, building defensible evidence, testing whether that evidence generalizes, and translating the result into a decision that a person can actually use.
+The project also changed how I think about model selection. I compared a transparent baseline with Logistic Regression, Decision Tree, and Random Forest rather than assuming that the most complex model would automatically be the best choice. The goal was to establish whether the learned models provided meaningful improvement over a simple, interpretable benchmark.
+
+If I continued the project, I would add stronger temporal validation, evaluate more client groups, monitor performance over time, and connect the ranked recommendations to actual content outcomes. I would also want to study whether pages identified by the system eventually improve after human reviewed interventions. That would require a more appropriate experimental or causal design rather than relying only on observational data.
+
+### Three transferable lessons
+
+**1. Start with the decision, not the model.**
+
+A machine learning model should solve a clearly defined problem. Thinking first about the decision the output will support helped me choose ranking metrics such as Precision@20 instead of focusing only on general classification metrics.
+
+**2. Validation design matters as much as model selection.**
+
+A model can appear strong under an inappropriate split. Using client grouped validation made me think more carefully about generalization and whether the evaluation represented the situation in which the system might eventually be used.
+
+**3. Honest limitations make technical work more credible.**
+
+I learned that saying what a model cannot prove is part of good technical communication. The model can help prioritize pages for human review, but it cannot guarantee future recovery or establish causality.
+
+Looking back to Week 1, I would now approach the same project differently. I would define the decision and evaluation strategy earlier, establish leakage controls before modelling, and treat the final metric as only one part of the evidence.
+
+The biggest outcome of this internship is therefore not simply that I trained a Random Forest model. It is that I became more comfortable building a machine learning project that I can explain, evaluate, defend, and communicate honestly.
