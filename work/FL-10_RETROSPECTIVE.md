@@ -1,6 +1,5 @@
-# FlyRank ML Internship Retrospective
-
-## Looking Back from Week 10
+FlyRank ML Internship Retrospective
+Looking Back from Week 10
 
 When I started the FlyRank ML Internship, I wanted to strengthen my practical machine learning skills and learn how to approach a real data problem from beginning to end. In Week 1, I was mainly focused on getting a model to work. I understood concepts such as classification, features, targets, and evaluation metrics, but I had not yet fully appreciated how much of a machine learning project happens before and after model training.
 
