@@ -109,33 +109,50 @@ The project documentation includes the project purpose, setup instructions, usag
 The demonstration shows the project workflow, model comparison, evaluation results, validation approach, a key design decision, and an important limitation.
 
 
-### FL-10: Final Package
+## FL-10: Final Internship Package
 
-**Status:** Final package in progress.
+This section brings together the final evidence and public artefacts from my FlyRank ML Internship.
 
-**Completed**
+### Final Project
 
-* GitHub project package
-* Internship retrospective
-* Personal portfolio site
-* Build-in-public LinkedIn post
+**Refresh / Content Opportunity Scoring**
 
-**Pending**
+A machine learning workflow for prioritizing content pages for human review based on observed performance signals.
 
-* Hours log in the FlyRank portal
-* Final review and sign-off
-* FL-09 demonstration recording
+[View the Capstone Report](work/capstone_report.md)
 
-### Public Links
+[View the Capstone Notebook](work/notebooks/capstone.ipynb)
 
-**GitHub Repository**
-https://github.com/Roselyn-Koech/flyrank-ml-internship
+### Documentation
 
-**Personal Portfolio**
-https://koech-data.netlify.app/
+[Project README](work/README.md)
 
-**Build-in-Public LinkedIn Post**
-https://www.linkedin.com/posts/roselyn-koech-3709042b8_machinelearning-ai-flyrank-activity-7499737732169211904-wwL5
+[FL-10 Retrospective](work/FL-10_RETROSPECTIVE.md)
+
+### Evaluation Evidence
+
+[Model Comparison](work/model_comparison.jpg)
+
+[Validation Evidence](work/validation_evidence.jpg)
+
+The final evaluation uses client-grouped validation and compares a transparent baseline with Logistic Regression, Decision Tree, and Random Forest models.
+
+### Demo
+
+[Watch the 3–5 minute project demonstration](https://drive.google.com/file/d/1-ngITGQUtlPk5Cio6rcn3VikxjQWZ8ka/view?usp=drive_link)
+
+### Build in Public
+
+[View the LinkedIn project post](https://www.linkedin.com/posts/roselyn-koech-3709042b8_machinelearning-ai-flyrank-activity-7499737732169211904-wwL5)
+
+### Personal Portfolio
+
+[View my personal portfolio](https://koech-data.netlify.app/)
+
+### Internship Repository
+
+[View the complete GitHub repository](https://github.com/Roselyn-Koech/flyrank-ml-internship)
+
 
 ### Project Status
 
