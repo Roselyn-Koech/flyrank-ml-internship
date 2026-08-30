@@ -84,17 +84,61 @@ Additional time-based validation, broader client evaluation, monitoring, and pro
 ## AI Transparency
 
 AI assistance was used during development to help structure, review, and document parts of the project. The data preparation, leakage exclusions, validation design, evaluation metrics, and final claims were checked against the capstone notebook. Unsupported feature-importance, causal, production-performance, and page-level claims were intentionally excluded.
+## Final Internship Deliverables
 
-## FL-10 Items Still Being Finalized
+### FL-09: Documentation and Demo
 
-The following items are intentionally left visible rather than being represented as complete before they exist:
+**Status:** Documentation complete. Demo recording pending.
 
-1. **500–800 word retrospective** — next deliverable to add.
-2. **Build-in-public post** — to be published after the final story is finalized.
-3. **Personal site** — live URL to be verified and added.
-4. **Hours log** — to be completed in the FlyRank portal.
-5. **FL-09 demo recording** — to be recorded separately after the written package is complete.
-6. **Final review checkpoint** — to be submitted after the package is complete.
+The project documentation includes the project purpose, setup instructions, usage workflow, evaluation results, architecture, limitations, reproducibility information, and AI transparency statement.
+
+**Completed**
+
+* README and project documentation
+* Setup and reproducibility instructions
+* Usage and workflow documentation
+* Model evaluation and comparison
+* Limitations and responsible interpretation
+* AI transparency statement
+
+**Pending**
+
+* 3–5 minute live demonstration video
+
+### FL-10: Final Package
+
+**Status:** Final package in progress.
+
+**Completed**
+
+* GitHub project package
+* Internship retrospective
+* Personal portfolio site
+* Build-in-public LinkedIn post
+
+**Pending**
+
+* Hours log in the FlyRank portal
+* Final review and sign-off
+* FL-09 demonstration recording
+
+### Public Links
+
+**GitHub Repository**
+https://github.com/Roselyn-Koech/flyrank-ml-internship
+
+**Personal Portfolio**
+https://koech-data.netlify.app/
+
+**Build-in-Public LinkedIn Post**
+https://www.linkedin.com/posts/roselyn-koech-3709042b8_machinelearning-ai-flyrank-activity-7499737732169211904-wwL5
+
+### Project Status
+
+The machine learning project and supporting documentation are complete. The remaining internship requirements are the live demonstration, portal completion steps, and final review.
+
+The project results are presented with their limitations and are not interpreted as proof of causal improvement or as a prediction of Google's ranking algorithm.
+
 
 ## Repository Structure
 
